@@ -33,21 +33,29 @@ class Hangman:
                 self._hangman[self._tries] = self._hangmanSet[self._tries]
                 self._tries +=1
             
+            #validate if the puzzle is solved
             if self.is_solved():
-                if self._stage == 5:
-                    self._word_list = self.load_json('normal')
-                elif self._stage == 9:
-                    self._tries = 6
-                    self.quit()
+                self._stage += 1
 
-                self.is_continue()
-                self.select_word()
-                self.display()
+                if self._stage > 9:
+                    self._tries = 6
+                else:
+                    if self._stage == 5:
+                        self._word_list = self.load_json('normal')
+
+                    self.is_continue()
+                    self.select_word()
+                    self.display()
 
             else:
                 self.display()
         
-            if self._tries > 5:
+
+            if self._stage > 9:
+                self.quit()
+                
+
+            elif self._tries > 5:
                 restart = self.restart()
                 if restart:
                     self._tries = 0
@@ -94,7 +102,6 @@ class Hangman:
     def is_continue(self)->None:
         countDown = 5
         self._tries =0
-        self._stage += 1
         self._guess = []
         self._hangman = [' ',' ', ' ', ' ', ' ', ' ']
         while countDown > 0:
